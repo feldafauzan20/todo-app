@@ -13,8 +13,6 @@ export default function LoginPage() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          // Tambahkan skipBrowserRedirect untuk menangani redirect manual
-          skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
@@ -22,16 +20,7 @@ export default function LoginPage() {
         },
       });
 
-      if (error) {
-        console.error("Login error:", error.message);
-        throw error;
-      }
-
-      // Redirect manual ke callback URL
-      if (data?.url) {
-        console.log("Redirecting to:", data.url);
-        window.location.href = data.url;
-      }
+      if (error) throw error;
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -39,29 +28,27 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-pink-100">
-      <div className="bg-white backdrop-blur-md p-8 mx-2 sm:mx-0 rounded-2xl shadow-xl w-96 space-y-8 border border-white/20 relative">
-        {/* Optimized Top Cat Image */}
+      <div className="bg-white backdrop-blur-md p-8 rounded-2xl shadow-xl w-96 space-y-8 border border-white/20 relative">
+        {/* Cat Modal Image */}
         <div className="absolute -top-23 left-1/2 -translate-x-1/2">
           <Image
-            src="/assets/illustrations/cat-edit-modal.webp"
+            src="/assets/illustrations/cat-modal.webp"
             alt="Cat illustration"
-            width={200}
-            height={200}
-            loading="eager"
-            priority
-            quality={75}
+            width={120}
+            height={120}
             className="drop-shadow-lg"
+            priority
           />
         </div>
 
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 mt-8">
           <h1 className="text-4xl font-bold text-blue-900">Hi there!</h1>
           <p className="text-blue-800/80">Please sign in to continue</p>
         </div>
 
         <button
           onClick={handleLoginWithGoogle}
-          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-blue-50 hover:cursor-pointer text-gray-700 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-blue-50 text-gray-700 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
         >
           <svg className="w-6 h-6" viewBox="0 0 24 24">
             <path
@@ -88,18 +75,6 @@ export default function LoginPage() {
           <p className="text-blue-900/70 text-sm">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
-        </div>
-
-        {/* Optimized Bottom Cat Image */}
-        <div className="absolute -bottom-23 left-1/2 -translate-x-1/2">
-          <Image
-            src="/assets/illustrations/cat-modal.webp"
-            alt="Cat illustration reversed"
-            width={300}
-            height={300}
-            quality={75}
-            className="drop-shadow-lg transform rotate-180"
-          />
         </div>
       </div>
     </div>

@@ -13,8 +13,6 @@ export default function LoginPage() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          // Tambahkan skipBrowserRedirect untuk menangani redirect manual
-          skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
@@ -22,16 +20,7 @@ export default function LoginPage() {
         },
       });
 
-      if (error) {
-        console.error("Login error:", error.message);
-        throw error;
-      }
-
-      // Redirect manual ke callback URL
-      if (data?.url) {
-        console.log("Redirecting to:", data.url);
-        window.location.href = data.url;
-      }
+      if (error) throw error;
     } catch (error) {
       console.error("Login failed:", error);
     }

@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { LuCheck, LuPencil, LuListTodo, LuSmartphone } from "react-icons/lu";
+import {
+  LuCheck,
+  LuPencil,
+  LuListTodo,
+  LuSmartphone,
+} from "react-icons/lu";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -32,22 +37,33 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-pink-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-pink-50">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col items-center text-center space-y-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-purple-800 leading-tight">
+          {/* Logo */}
+          <div className="w-32 h-32 relative mb-8">
+            <Image
+              src="/assets/illustrations/cat-modal.webp"
+              alt="Todo App Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold text-blue-900 leading-tight">
             Manage Tasks Better
           </h1>
 
-          <p className="text-lg md:text-xl text-purple-700/80 max-w-2xl">
+          <p className="text-lg md:text-xl text-blue-800/80 max-w-2xl">
             Stay organized and boost your productivity with our simple yet
             powerful todo app
           </p>
 
           <button
             onClick={() => router.push("/login")}
-            className="bg-purple-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-purple-700 transition-colors"
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition-colors"
           >
             Get Started
           </button>
@@ -56,7 +72,7 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-800 mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-12">
           Why Choose Our Todo App?
         </h2>
 
@@ -64,15 +80,14 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-purple-100"
+              className="bg-white/50 backdrop-blur-sm p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex flex-col items-center text-center space-y-4">
-                {/* Update feature icon color */}
-                <div className="text-purple-600">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-purple-800">
+                {feature.icon}
+                <h3 className="text-xl font-semibold text-blue-900">
                   {feature.title}
                 </h3>
-                <p className="text-purple-700/70">{feature.description}</p>
+                <p className="text-blue-800/70">{feature.description}</p>
               </div>
             </div>
           ))}
@@ -81,45 +96,37 @@ export default function LandingPage() {
 
       {/* Benefits Section */}
       <div className="container mx-auto px-4 py-16 mb-8">
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-purple-100">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-800 mb-8">
+        <div className="bg-white/30 backdrop-blur-sm rounded-2xl p-8 md:p-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-8">
             Boost Your Productivity
           </h2>
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
-              <p className="text-lg text-purple-700/80">
+              <p className="text-lg text-blue-800/80">
                 Our todo app helps you:
               </p>
               <ul className="space-y-4">
                 <li className="flex items-center space-x-3">
-                  <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Stay focused on important tasks
-                  </span>
+                  <LuCheck className="w-6 h-6 text-blue-600" />
+                  <span>Stay focused on important tasks</span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Never forget important deadlines
-                  </span>
+                  <LuCheck className="w-6 h-6 text-blue-600" />
+                  <span>Never forget important deadlines</span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Track your daily progress
-                  </span>
+                  <LuCheck className="w-6 h-6 text-blue-600" />
+                  <span>Track your daily progress</span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Organize tasks efficiently
-                  </span>
+                  <LuCheck className="w-6 h-6 text-blue-600" />
+                  <span>Organize tasks efficiently</span>
                 </li>
               </ul>
             </div>
             <div className="relative h-64 md:h-96">
               <Image
-                src="/assets/illustrations/check-image-landing.webp"
+                src="/assets/illustrations/cat-modal-reverse.webp"
                 alt="Productivity Illustration"
                 fill
                 className="object-contain"

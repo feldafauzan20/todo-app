@@ -13,8 +13,6 @@ export default function LoginPage() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          // Tambahkan skipBrowserRedirect untuk menangani redirect manual
-          skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
@@ -22,16 +20,7 @@ export default function LoginPage() {
         },
       });
 
-      if (error) {
-        console.error("Login error:", error.message);
-        throw error;
-      }
-
-      // Redirect manual ke callback URL
-      if (data?.url) {
-        console.log("Redirecting to:", data.url);
-        window.location.href = data.url;
-      }
+      if (error) throw error;
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -39,18 +28,17 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-pink-100">
-      <div className="bg-white backdrop-blur-md p-8 mx-2 sm:mx-0 rounded-2xl shadow-xl w-96 space-y-8 border border-white/20 relative">
-        {/* Optimized Top Cat Image */}
-        <div className="absolute -top-23 left-1/2 -translate-x-1/2">
+      <div className="bg-white backdrop-blur-md p-8 rounded-2xl shadow-xl w-96 space-y-8 border border-white/20 relative">
+        {/* Cat Modal Image Top */}
+        <div className="absolute -top-31 left-1/2 -translate-x-1/2">
           <Image
             src="/assets/illustrations/cat-edit-modal.webp"
             alt="Cat illustration"
-            width={200}
-            height={200}
-            loading="eager"
+            width={250}
+            height={250}
+            className="drop-shadow-lg w-auto h-auto"
+            style={{ maxWidth: "500px", maxHeight: "500px" }}
             priority
-            quality={75}
-            className="drop-shadow-lg"
           />
         </div>
 
@@ -61,7 +49,7 @@ export default function LoginPage() {
 
         <button
           onClick={handleLoginWithGoogle}
-          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-blue-50 hover:cursor-pointer text-gray-700 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-blue-50 text-gray-700 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
         >
           <svg className="w-6 h-6" viewBox="0 0 24 24">
             <path
@@ -90,15 +78,15 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Optimized Bottom Cat Image */}
+        {/* Cat Modal Image Bottom */}
         <div className="absolute -bottom-23 left-1/2 -translate-x-1/2">
           <Image
             src="/assets/illustrations/cat-modal.webp"
             alt="Cat illustration reversed"
             width={300}
             height={300}
-            quality={75}
             className="drop-shadow-lg transform rotate-180"
+            priority
           />
         </div>
       </div>

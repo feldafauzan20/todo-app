@@ -32,10 +32,21 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-pink-100">
+    <div className="min-h-screen h-full bg-pink-100">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col items-center text-center space-y-8">
+          {/* Logo */}
+          <div className="w-32 h-32 relative mb-8">
+            <Image
+              src="/assets/illustrations/cat-modal.webp"
+              alt="Todo App Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
           <h1 className="text-4xl md:text-6xl font-bold text-purple-800 leading-tight">
             Manage Tasks Better
           </h1>
@@ -119,7 +130,7 @@ export default function LandingPage() {
             </div>
             <div className="relative h-64 md:h-96">
               <Image
-                src="/assets/illustrations/check-image-landing.webp"
+                src="/assets/illustrations/cat-modal-reverse.webp"
                 alt="Productivity Illustration"
                 fill
                 className="object-contain"

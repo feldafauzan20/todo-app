@@ -38,23 +38,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-100">
-      <div className="bg-white backdrop-blur-md p-8 mx-2 sm:mx-0 rounded-2xl shadow-xl w-96 space-y-8 border border-white/20 relative">
-        {/* Optimized Top Cat Image */}
-        <div className="absolute -top-23 left-1/2 -translate-x-1/2">
+    <div className="min-h-screen flex items-center justify-center bg-pink-100 px-4 py-32">
+      <div className="bg-white backdrop-blur-md p-8 rounded-2xl shadow-xl w-full max-w-sm space-y-8 border border-white/20 relative">
+        {/* Top Cat Image */}
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: '-5rem' }}>
           <Image
             src="/assets/illustrations/cat-edit-modal.webp"
             alt="Cat illustration"
             width={200}
             height={200}
-            loading="eager"
+            className="drop-shadow-lg w-[120px] h-[120px] sm:w-[200px] sm:h-[200px]"
             priority
-            quality={75}
-            className="drop-shadow-lg"
           />
         </div>
 
-        <div className="text-center space-y-4">
+        {/* Content with proper spacing */}
+        <div className="text-center space-y-4 mt-16 sm:mt-20">
           <h1 className="text-4xl font-bold text-blue-900">Hi there!</h1>
           <p className="text-blue-800/80">Please sign in to continue</p>
         </div>
@@ -90,15 +89,14 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Optimized Bottom Cat Image */}
-        <div className="absolute -bottom-23 left-1/2 -translate-x-1/2">
+        {/* Bottom Cat Image */}
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: '-5rem' }}>
           <Image
             src="/assets/illustrations/cat-modal.webp"
             alt="Cat illustration reversed"
             width={300}
             height={300}
-            quality={75}
-            className="drop-shadow-lg transform rotate-180"
+            className="drop-shadow-lg transform rotate-180 w-[120px] h-[120px] sm:w-[300px] sm:h-[300px]"
           />
         </div>
       </div>

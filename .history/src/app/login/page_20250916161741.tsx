@@ -13,11 +13,16 @@ export default function LoginPage() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          // Tambahkan skipBrowserRedirect untuk menangani redirect manual
-          skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
+          },
+          cookieOptions: {
+            name: "sb-auth-token",
+            lifetime: 60 * 60 * 24 * 7, // 1 week
+            domain: window.location.hostname,
+            path: "/",
+            sameSite: "lax",
           },
         },
       });
@@ -27,11 +32,8 @@ export default function LoginPage() {
         throw error;
       }
 
-      // Redirect manual ke callback URL
-      if (data?.url) {
-        console.log("Redirecting to:", data.url);
-        window.location.href = data.url;
-      }
+      // Log untuk debugging
+      console.log("Login successful, data:", data);
     } catch (error) {
       console.error("Login failed:", error);
     }

@@ -13,8 +13,6 @@ export default function LoginPage() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          // Tambahkan skipBrowserRedirect untuk menangani redirect manual
-          skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
@@ -22,24 +20,15 @@ export default function LoginPage() {
         },
       });
 
-      if (error) {
-        console.error("Login error:", error.message);
-        throw error;
-      }
-
-      // Redirect manual ke callback URL
-      if (data?.url) {
-        console.log("Redirecting to:", data.url);
-        window.location.href = data.url;
-      }
+      if (error) throw error;
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-100">
-      <div className="bg-white backdrop-blur-md p-8 mx-2 sm:mx-0 rounded-2xl shadow-xl w-96 space-y-8 border border-white/20 relative">
+    <div className="min-h-screen flex items-center justify-center bg-pink-100 px-4">
+      <div className="bg-white backdrop-blur-md p-8 rounded-2xl shadow-xl w-full max-w-sm space-y-8 border border-white/20 relative mt-24 mb-24">
         {/* Optimized Top Cat Image */}
         <div className="absolute -top-23 left-1/2 -translate-x-1/2">
           <Image
@@ -91,13 +80,15 @@ export default function LoginPage() {
         </div>
 
         {/* Optimized Bottom Cat Image */}
-        <div className="absolute -bottom-23 left-1/2 -translate-x-1/2">
+        <div className="absolute -bottom-20 sm:-bottom-23 left-1/2 -translate-x-1/2">
           <Image
             src="/assets/illustrations/cat-modal.webp"
             alt="Cat illustration reversed"
             width={300}
             height={300}
             quality={75}
+            placeholder="blur"
+            blurDataURL="data:image/webp;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
             className="drop-shadow-lg transform rotate-180"
           />
         </div>

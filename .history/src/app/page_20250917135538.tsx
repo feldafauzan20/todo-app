@@ -119,7 +119,7 @@ export default function LandingPage() {
             </div>
             <div className="relative h-64 md:h-96">
               <Image
-                src="/assets/illustrations/check-image-landing.webp"
+                src="/assets/illustrations/cat-modal-reverse.webp"
                 alt="Productivity Illustration"
                 fill
                 className="object-contain"

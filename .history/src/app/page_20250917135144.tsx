@@ -36,6 +36,17 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col items-center text-center space-y-8">
+          {/* Logo */}
+          <div className="w-32 h-32 relative mb-8">
+            <Image
+              src="/assets/illustrations/cat-modal.webp"
+              alt="Todo App Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
           <h1 className="text-4xl md:text-6xl font-bold text-purple-800 leading-tight">
             Manage Tasks Better
           </h1>
@@ -93,33 +104,25 @@ export default function LandingPage() {
               <ul className="space-y-4">
                 <li className="flex items-center space-x-3">
                   <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Stay focused on important tasks
-                  </span>
+                  <span className="text-purple-700">Stay focused on important tasks</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Never forget important deadlines
-                  </span>
+                  <span className="text-purple-700">Never forget important deadlines</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Track your daily progress
-                  </span>
+                  <span className="text-purple-700">Track your daily progress</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <LuCheck className="w-6 h-6 text-purple-600" />
-                  <span className="text-purple-700">
-                    Organize tasks efficiently
-                  </span>
+                  <span className="text-purple-700">Organize tasks efficiently</span>
                 </li>
               </ul>
             </div>
             <div className="relative h-64 md:h-96">
               <Image
-                src="/assets/illustrations/check-image-landing.webp"
+                src="/assets/illustrations/cat-modal-reverse.webp"
                 alt="Productivity Illustration"
                 fill
                 className="object-contain"
