@@ -20,29 +20,6 @@ type EditModalProps = {
   ) => void;
 };
 
-const formatDateTimeForInput = (dateString: string) => {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  // Convert to local ISO string and remove the timezone part
-  return date.toISOString().slice(0, 16);
-};
-
-// Update the formatDateTimeForSubmit function
-const formatDateTimeForSubmit = (dateString: string): string | undefined => {
-  if (!dateString) return undefined;
-  const date = new Date(dateString);
-  // Create UTC date without timezone conversion
-  return new Date(
-    Date.UTC(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      date.getHours(),
-      date.getMinutes()
-    )
-  ).toISOString();
-};
-
 export default function EditModal({
   isOpen,
   onClose,
@@ -54,12 +31,8 @@ export default function EditModal({
 }: EditModalProps) {
   const [text, setText] = useState(initialText);
   const [priority, setPriority] = useState(initialPriority);
-  const [deadline, setDeadline] = useState(
-    formatDateTimeForInput(initialDeadline || "")
-  );
-  const [reminder, setReminder] = useState(
-    formatDateTimeForInput(initialReminder || "")
-  );
+  const [deadline, setDeadline] = useState(initialDeadline || "");
+  const [reminder, setReminder] = useState(initialReminder || "");
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,8 +41,8 @@ export default function EditModal({
   useEffect(() => {
     setText(initialText);
     setPriority(initialPriority);
-    setDeadline(formatDateTimeForInput(initialDeadline || ""));
-    setReminder(formatDateTimeForInput(initialReminder || ""));
+    setDeadline(initialDeadline || "");
+    setReminder(initialReminder || "");
   }, [initialText, initialPriority, initialDeadline, initialReminder]);
 
   // auto focus saat modal dibuka
@@ -96,12 +69,7 @@ export default function EditModal({
     if (isDisabled) return;
     try {
       setLoading(true);
-      await onSave(
-        text.trim(),
-        priority,
-        deadline ? formatDateTimeForSubmit(deadline) : undefined,
-        reminder ? formatDateTimeForSubmit(reminder) : undefined
-      );
+      await onSave(text, priority, deadline, reminder);
 
       setSaved(true);
       setTimeout(() => {
@@ -221,15 +189,15 @@ export default function EditModal({
                 </button>
                 <button
                   type="button"
-                  onClick={handleSave}
-                  disabled={isDisabled}
-                  className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors ${
-                    isDisabled
-                      ? "bg-blue-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
-                  }`}
+                  onClick={() => {
+                    if (text.trim()) {
+                      onSave(text.trim(), priority, deadline, reminder);
+                      onClose();
+                    }
+                  }}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  {loading ? "Saving..." : "Save Changes"}
+                  Save Changes
                 </button>
               </div>
             </form>

@@ -26,9 +26,7 @@ type Props = {
   updateTodo: (
     id: number,
     text: string,
-    priority: "low" | "medium" | "high",
-    deadline?: string,
-    reminder?: string
+    priority: "low" | "medium" | "high"
   ) => void; // Update this
   deleteAllTodos: () => Promise<void>;
 };
@@ -53,13 +51,6 @@ export default function TodoList({
     "low" | "medium" | "high"
   >("medium");
 
-  const [editTodoDeadline, setEditTodoDeadline] = useState<string | undefined>(
-    undefined
-  );
-  const [editTodoReminder, setEditTodoReminder] = useState<string | undefined>(
-    undefined
-  );
-
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
 
   const truncateText = (text: string, maxLength: number = 35) => {
@@ -70,10 +61,7 @@ export default function TodoList({
   const todosArray = Array.isArray(todos) ? todos : [];
 
   // Add helper function to format date in Indonesian
-  const formatIndonesianDateTime = (dateString: string) => {
-    // Parse the date string and create a date object
-    const date = new Date(dateString);
-
+  const formatIndonesianDateTime = (date: Date) => {
     const days = [
       "Minggu",
       "Senin",
@@ -98,24 +86,12 @@ export default function TodoList({
       "Desember",
     ];
 
-    // Get UTC time components
-    const utcDay = date.getUTCDay();
-    const utcDate = date.getUTCDate();
-    const utcMonth = date.getUTCMonth();
-    const utcYear = date.getUTCFullYear();
-    const utcHours = date.getUTCHours();
-    const utcMinutes = date.getUTCMinutes();
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
 
-    // Format with UTC values
-    return `${days[utcDay]}, ${utcDate} ${months[utcMonth]} ${utcYear} ${String(
-      utcHours
-    ).padStart(2, "0")}:${String(utcMinutes).padStart(2, "0")}`;
-  };
-
-  // Add this helper function to convert date format for datetime-local input
-  const formatDateForInput = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDThh:mm
+    return `${day}, ${date.getDate()} ${month} ${date.getFullYear()} ${String(
+      date.getHours()
+    ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
   };
 
   return (
@@ -182,7 +158,8 @@ export default function TodoList({
                                 : "text-gray-500"
                             }`}
                           >
-                            {formatIndonesianDateTime(todo.deadline)} WIB
+                            {formatIndonesianDateTime(new Date(todo.deadline))}{" "}
+                            WIB
                           </span>
                         </div>
                       )}
@@ -191,7 +168,8 @@ export default function TodoList({
                         <div className="flex items-center gap-1">
                           <Bell className="h-4 w-4 text-gray-400" />
                           <span className="text-gray-500">
-                            {formatIndonesianDateTime(todo.reminder)} WIB
+                            {formatIndonesianDateTime(new Date(todo.reminder))}{" "}
+                            WIB
                           </span>
                         </div>
                       )}
@@ -221,8 +199,6 @@ export default function TodoList({
                       setEditTodoId(todo.id);
                       setEditTodoText(todo.text);
                       setEditTodoPriority(todo.priority || "medium");
-                      setEditTodoDeadline(todo.deadline);
-                      setEditTodoReminder(todo.reminder);
                       setIsEditModalOpen(true);
                     }}
                     className="text-blue-600 hover:text-blue-800 hover:cursor-pointer"
@@ -263,11 +239,10 @@ export default function TodoList({
         onClose={() => setIsEditModalOpen(false)}
         initialText={editTodoText}
         initialPriority={editTodoPriority}
-        initialDeadline={editTodoDeadline}
-        initialReminder={editTodoReminder}
-        onSave={(text, priority, deadline, reminder) => {
+        onSave={(text, priority) => {
           if (editTodoId) {
-            updateTodo(editTodoId, text, priority, deadline, reminder);
+            updateTodo(editTodoId, text, priority);
+            // toast.success("Task updated successfully!");
           }
         }}
       />

@@ -219,9 +219,7 @@ export default function Dashboard() {
       if (data) {
         setTodos(
           todos.map((todo) =>
-            todo.id === id
-              ? { ...todo, text, priority, deadline, reminder }
-              : todo
+            todo.id === id ? { ...todo, text, priority, deadline, reminder } : todo
           )
         );
         toast.success("Task updated successfully!", { id: toastId });

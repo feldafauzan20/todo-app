@@ -118,6 +118,13 @@ export default function TodoList({
     return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDThh:mm
   };
 
+  // Tambahkan fungsi helper untuk mengecek overdue
+  const isOverdue = (deadline: string) => {
+    const now = new Date();
+    const deadlineDate = new Date(deadline);
+    return now > deadlineDate;
+  };
+
   return (
     <>
       {/* Delete All button section */}
@@ -177,12 +184,15 @@ export default function TodoList({
                           <Calendar className="h-4 w-4 text-gray-400" />
                           <span
                             className={`${
-                              isPast(new Date(todo.deadline)) && !todo.is_done
-                                ? "text-red-500"
+                              isOverdue(todo.deadline) && !todo.is_done
+                                ? "text-red-500 font-medium animate-pulse" // Add animation and bold text
                                 : "text-gray-500"
                             }`}
                           >
                             {formatIndonesianDateTime(todo.deadline)} WIB
+                            {isOverdue(todo.deadline) && !todo.is_done && (
+                              <span className="ml-1 text-xs">(Overdue)</span>
+                            )}
                           </span>
                         </div>
                       )}
@@ -263,11 +273,10 @@ export default function TodoList({
         onClose={() => setIsEditModalOpen(false)}
         initialText={editTodoText}
         initialPriority={editTodoPriority}
-        initialDeadline={editTodoDeadline}
-        initialReminder={editTodoReminder}
-        onSave={(text, priority, deadline, reminder) => {
+        onSave={(text, priority) => {
           if (editTodoId) {
-            updateTodo(editTodoId, text, priority, deadline, reminder);
+            updateTodo(editTodoId, text, priority);
+            // toast.success("Task updated successfully!");
           }
         }}
       />

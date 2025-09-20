@@ -191,7 +191,7 @@ export default function TodoList({
                         <div className="flex items-center gap-1">
                           <Bell className="h-4 w-4 text-gray-400" />
                           <span className="text-gray-500">
-                            {formatIndonesianDateTime(todo.reminder)} WIB
+                            {todo.reminder} WIB
                           </span>
                         </div>
                       )}
@@ -263,11 +263,10 @@ export default function TodoList({
         onClose={() => setIsEditModalOpen(false)}
         initialText={editTodoText}
         initialPriority={editTodoPriority}
-        initialDeadline={editTodoDeadline}
-        initialReminder={editTodoReminder}
-        onSave={(text, priority, deadline, reminder) => {
+        onSave={(text, priority) => {
           if (editTodoId) {
-            updateTodo(editTodoId, text, priority, deadline, reminder);
+            updateTodo(editTodoId, text, priority);
+            // toast.success("Task updated successfully!");
           }
         }}
       />

@@ -178,11 +178,14 @@ export default function TodoList({
                           <span
                             className={`${
                               isPast(new Date(todo.deadline)) && !todo.is_done
-                                ? "text-red-500"
+                                ? "text-red-500 font-medium animate-pulse" // Add animation and bold text
                                 : "text-gray-500"
                             }`}
                           >
                             {formatIndonesianDateTime(todo.deadline)} WIB
+                            {isPast(new Date(todo.deadline)) && !todo.is_done && (
+                              <span className="ml-1 text-xs">(Overdue)</span>
+                            )}
                           </span>
                         </div>
                       )}
@@ -263,11 +266,10 @@ export default function TodoList({
         onClose={() => setIsEditModalOpen(false)}
         initialText={editTodoText}
         initialPriority={editTodoPriority}
-        initialDeadline={editTodoDeadline}
-        initialReminder={editTodoReminder}
-        onSave={(text, priority, deadline, reminder) => {
+        onSave={(text, priority) => {
           if (editTodoId) {
-            updateTodo(editTodoId, text, priority, deadline, reminder);
+            updateTodo(editTodoId, text, priority);
+            // toast.success("Task updated successfully!");
           }
         }}
       />

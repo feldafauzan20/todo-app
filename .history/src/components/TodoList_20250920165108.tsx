@@ -71,8 +71,9 @@ export default function TodoList({
 
   // Add helper function to format date in Indonesian
   const formatIndonesianDateTime = (dateString: string) => {
-    // Parse the date string and create a date object
+    // Convert UTC to local time
     const date = new Date(dateString);
+    const localDate = new Date(date.getTime() + 7 * 60 * 60 * 1000); // Add 7 hours for WIB
 
     const days = [
       "Minggu",
@@ -98,24 +99,47 @@ export default function TodoList({
       "Desember",
     ];
 
-    // Get UTC time components
-    const utcDay = date.getUTCDay();
-    const utcDate = date.getUTCDate();
-    const utcMonth = date.getUTCMonth();
-    const utcYear = date.getUTCFullYear();
-    const utcHours = date.getUTCHours();
-    const utcMinutes = date.getUTCMinutes();
-
-    // Format with UTC values
-    return `${days[utcDay]}, ${utcDate} ${months[utcMonth]} ${utcYear} ${String(
-      utcHours
-    ).padStart(2, "0")}:${String(utcMinutes).padStart(2, "0")}`;
+    return `${days[localDate.getDay()]}, ${localDate.getDate()} ${
+      months[localDate.getMonth()]
+    } ${localDate.getFullYear()} ${String(localDate.getHours()).padStart(
+      2,
+      "0"
+    )}:${String(localDate.getMinutes()).padStart(2, "0")}`;
   };
 
   // Add this helper function to convert date format for datetime-local input
   const formatDateForInput = (dateString: string) => {
     const date = new Date(dateString);
     return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDThh:mm
+  };
+
+  // Replace the existing isOverdue function with this one
+  const isOverdue = (deadline: string) => {
+    // Get current date in UTC
+    const now = new Date();
+    const utcNow = Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate(),
+      now.getUTCHours(),
+      now.getUTCMinutes()
+    );
+
+    // Convert deadline to UTC
+    const deadlineDate = new Date(deadline);
+    const utcDeadline = Date.UTC(
+      deadlineDate.getUTCFullYear(),
+      deadlineDate.getUTCMonth(),
+      deadlineDate.getUTCDate(),
+      deadlineDate.getUTCHours(),
+      deadlineDate.getUTCMinutes()
+    );
+
+    console.log("Current time (UTC):", new Date(utcNow).toISOString());
+    console.log("Deadline time (UTC):", new Date(utcDeadline).toISOString());
+    console.log("Is overdue?", utcNow > utcDeadline);
+
+    return utcNow > utcDeadline;
   };
 
   return (
@@ -175,15 +199,22 @@ export default function TodoList({
                       {todo.deadline && (
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4 text-gray-400" />
-                          <span
-                            className={`${
-                              isPast(new Date(todo.deadline)) && !todo.is_done
-                                ? "text-red-500"
-                                : "text-gray-500"
-                            }`}
-                          >
-                            {formatIndonesianDateTime(todo.deadline)} WIB
-                          </span>
+                          <div className="flex items-center gap-1">
+                            <span
+                              className={
+                                isOverdue(todo.deadline) && !todo.is_done
+                                  ? "text-red-500 font-medium"
+                                  : "text-gray-500"
+                              }
+                            >
+                              {formatIndonesianDateTime(todo.deadline)} WIB
+                            </span>
+                            {isOverdue(todo.deadline) && !todo.is_done && (
+                              <span className="ml-2 text-red-500 bg-red-50 px-2 py-0.5 rounded-full text-xs font-bold">
+                                Overdue!
+                              </span>
+                            )}
+                          </div>
                         </div>
                       )}
 
@@ -263,11 +294,10 @@ export default function TodoList({
         onClose={() => setIsEditModalOpen(false)}
         initialText={editTodoText}
         initialPriority={editTodoPriority}
-        initialDeadline={editTodoDeadline}
-        initialReminder={editTodoReminder}
-        onSave={(text, priority, deadline, reminder) => {
+        onSave={(text, priority) => {
           if (editTodoId) {
-            updateTodo(editTodoId, text, priority, deadline, reminder);
+            updateTodo(editTodoId, text, priority);
+            // toast.success("Task updated successfully!");
           }
         }}
       />

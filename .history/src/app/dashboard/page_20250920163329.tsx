@@ -196,21 +196,15 @@ export default function Dashboard() {
   const updateTodo = async (
     id: number,
     text: string,
-    priority: "low" | "medium" | "high",
-    deadline?: string,
-    reminder?: string
+    priority: "low" | "medium" | "high" = "medium" // Add default value
   ) => {
-    try {
-      const toastId = toast.loading("Updating task...");
+    const toastId = toast.loading("Updating task...");
+    const previousTodos = [...todos];
 
+    try {
       const { data, error } = await supabase
         .from("todos")
-        .update({
-          text,
-          priority,
-          deadline: deadline || null,
-          reminder: reminder || null,
-        })
+        .update({ text, priority })
         .eq("id", id)
         .select();
 
@@ -219,16 +213,15 @@ export default function Dashboard() {
       if (data) {
         setTodos(
           todos.map((todo) =>
-            todo.id === id
-              ? { ...todo, text, priority, deadline, reminder }
-              : todo
+            todo.id === id ? { ...todo, text, priority } : todo
           )
         );
         toast.success("Task updated successfully!", { id: toastId });
       }
     } catch (error) {
+      setTodos(previousTodos);
       console.error("Error updating todo:", error);
-      toast.error("Failed to update task");
+      toast.error("Failed to update task", { id: toastId });
     }
   };
 

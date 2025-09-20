@@ -19,8 +19,8 @@ import ConfirmModal from "@/components/modal/ConfirmModal";
 import EditModal from "@/components/edit/EditModal";
 import TodoList from "@/components/TodoList"; // Import TodoList component
 import AddTodoModal from "@/components/modal/AddTodoModal";
-// import { format } from "date-fns";
-// import { id } from "date-fns/locale";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 type Todo = {
   id: number;
@@ -92,36 +92,19 @@ export default function Dashboard() {
       } = await supabase.auth.getSession();
       if (session?.user) {
         setUser(session.user);
+        fetchTodos();
       }
     };
     checkUser();
   }, []);
 
-  // The second useEffect already handles fetching todos when user is set
-  useEffect(() => {
-    const getTodos = async () => {
-      if (!user) return; // Add this check
-
-      try {
-        const { data, error } = await supabase
-          .from("todos")
-          .select("id, text, is_done, priority, deadline, reminder, created_at")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
-
-        console.log("Fetched todos:", data);
-        setTodos(data || []);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching todos:", error);
-        setLoading(false);
-      }
-    };
-
-    getTodos();
-  }, [user]);
+  const fetchTodos = async () => {
+    setLoading(true);
+    const res = await fetch("/api/todos", { credentials: "include" });
+    const data = await res.json();
+    setTodos(data);
+    setLoading(false);
+  };
 
   const addTodo = async (
     text: string,
@@ -133,7 +116,6 @@ export default function Dashboard() {
     if (!text.trim()) return;
 
     try {
-      // Store the dates exactly as received from the input
       const { data, error } = await supabase
         .from("todos")
         .insert([
@@ -141,8 +123,8 @@ export default function Dashboard() {
             text,
             user_id: user.id,
             priority,
-            deadline,
-            reminder,
+            deadline: deadline || null,
+            reminder: reminder || null,
           },
         ])
         .select();
@@ -153,7 +135,7 @@ export default function Dashboard() {
         setTodos([...todos, ...data]);
         toast.success("Task added successfully!");
 
-        // Set reminder notification using the original time
+        // Set up reminder notification
         if (reminder) {
           const reminderTime = new Date(reminder).getTime();
           const now = Date.now();
@@ -196,21 +178,15 @@ export default function Dashboard() {
   const updateTodo = async (
     id: number,
     text: string,
-    priority: "low" | "medium" | "high",
-    deadline?: string,
-    reminder?: string
+    priority: "low" | "medium" | "high" = "medium" // Add default value
   ) => {
-    try {
-      const toastId = toast.loading("Updating task...");
+    const toastId = toast.loading("Updating task...");
+    const previousTodos = [...todos];
 
+    try {
       const { data, error } = await supabase
         .from("todos")
-        .update({
-          text,
-          priority,
-          deadline: deadline || null,
-          reminder: reminder || null,
-        })
+        .update({ text, priority })
         .eq("id", id)
         .select();
 
@@ -219,16 +195,15 @@ export default function Dashboard() {
       if (data) {
         setTodos(
           todos.map((todo) =>
-            todo.id === id
-              ? { ...todo, text, priority, deadline, reminder }
-              : todo
+            todo.id === id ? { ...todo, text, priority } : todo
           )
         );
         toast.success("Task updated successfully!", { id: toastId });
       }
     } catch (error) {
+      setTodos(previousTodos);
       console.error("Error updating todo:", error);
-      toast.error("Failed to update task");
+      toast.error("Failed to update task", { id: toastId });
     }
   };
 

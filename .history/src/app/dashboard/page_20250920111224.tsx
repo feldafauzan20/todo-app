@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
-// import TodoForm from "@/components/TodoForm";
+import TodoForm from "@/components/TodoForm";
 import toast from "react-hot-toast";
 import {
   BookOpenCheck,
@@ -12,15 +12,11 @@ import {
   LogOut,
   Search,
   Flag,
-  Plus,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import EditModal from "@/components/edit/EditModal";
 import TodoList from "@/components/TodoList"; // Import TodoList component
-import AddTodoModal from "@/components/modal/AddTodoModal";
-// import { format } from "date-fns";
-// import { id } from "date-fns/locale";
 
 type Todo = {
   id: number;
@@ -31,22 +27,11 @@ type Todo = {
   reminder?: string; // ISO date string
 };
 
-// Add these helper functions
-// const formatToWIB = (date: Date) => {
-//   return format(date, "EEEE, d MMMM yyyy HH:mm 'WIB'", { locale: id });
-// };
-
-// const getWIBTime = (isoString: string) => {
-//   const date = new Date(isoString);
-//   return new Date(date.getTime() + 7 * 60 * 60 * 1000); // Add 7 hours for WIB
-// };
-
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // 👉 Animated completion rate
   const [animatedRate, setAnimatedRate] = useState(0);
@@ -92,36 +77,19 @@ export default function Dashboard() {
       } = await supabase.auth.getSession();
       if (session?.user) {
         setUser(session.user);
+        fetchTodos();
       }
     };
     checkUser();
   }, []);
 
-  // The second useEffect already handles fetching todos when user is set
-  useEffect(() => {
-    const getTodos = async () => {
-      if (!user) return; // Add this check
-
-      try {
-        const { data, error } = await supabase
-          .from("todos")
-          .select("id, text, is_done, priority, deadline, reminder, created_at")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
-
-        console.log("Fetched todos:", data);
-        setTodos(data || []);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching todos:", error);
-        setLoading(false);
-      }
-    };
-
-    getTodos();
-  }, [user]);
+  const fetchTodos = async () => {
+    setLoading(true);
+    const res = await fetch("/api/todos", { credentials: "include" });
+    const data = await res.json();
+    setTodos(data);
+    setLoading(false);
+  };
 
   const addTodo = async (
     text: string,
@@ -133,18 +101,15 @@ export default function Dashboard() {
     if (!text.trim()) return;
 
     try {
-      // Store the dates exactly as received from the input
       const { data, error } = await supabase
         .from("todos")
-        .insert([
-          {
-            text,
-            user_id: user.id,
-            priority,
-            deadline,
-            reminder,
-          },
-        ])
+        .insert([{
+          text,
+          user_id: user.id,
+          priority,
+          deadline: deadline || null,
+          reminder: reminder || null
+        }])
         .select();
 
       if (error) throw error;
@@ -153,16 +118,16 @@ export default function Dashboard() {
         setTodos([...todos, ...data]);
         toast.success("Task added successfully!");
 
-        // Set reminder notification using the original time
+        // Set up reminder notification
         if (reminder) {
           const reminderTime = new Date(reminder).getTime();
-          const now = Date.now();
+          const now = new Date().getTime();
 
           if (reminderTime > now) {
             setTimeout(() => {
               toast.success(`Reminder: ${text}`, {
-                duration: 10000,
-                icon: "🔔",
+                duration: 10000, // 10 seconds
+                icon: '🔔'
               });
             }, reminderTime - now);
           }
@@ -196,21 +161,15 @@ export default function Dashboard() {
   const updateTodo = async (
     id: number,
     text: string,
-    priority: "low" | "medium" | "high",
-    deadline?: string,
-    reminder?: string
+    priority: "low" | "medium" | "high" = "medium" // Add default value
   ) => {
-    try {
-      const toastId = toast.loading("Updating task...");
+    const toastId = toast.loading("Updating task...");
+    const previousTodos = [...todos];
 
+    try {
       const { data, error } = await supabase
         .from("todos")
-        .update({
-          text,
-          priority,
-          deadline: deadline || null,
-          reminder: reminder || null,
-        })
+        .update({ text, priority })
         .eq("id", id)
         .select();
 
@@ -219,16 +178,15 @@ export default function Dashboard() {
       if (data) {
         setTodos(
           todos.map((todo) =>
-            todo.id === id
-              ? { ...todo, text, priority, deadline, reminder }
-              : todo
+            todo.id === id ? { ...todo, text, priority } : todo
           )
         );
         toast.success("Task updated successfully!", { id: toastId });
       }
     } catch (error) {
+      setTodos(previousTodos);
       console.error("Error updating todo:", error);
-      toast.error("Failed to update task");
+      toast.error("Failed to update task", { id: toastId });
     }
   };
 
@@ -537,13 +495,10 @@ export default function Dashboard() {
         {/* Todos */}
         <div className="bg-white rounded-2xl shadow-sm border p-6">
           <div className="mb-8">
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="w-full px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center gap-2"
-            >
-              <Plus className="h-5 w-5" />
+            <h2 className="text-lg font-medium text-gray-800 mb-3">
               Add New Task
-            </button>
+            </h2>
+            <TodoForm addTodo={addTodo} />
           </div>
 
           {/* Filter & Search */}
@@ -698,12 +653,6 @@ export default function Dashboard() {
               updateTodo(editModal.todo.id, text, priority);
             }
           }}
-        />
-
-        <AddTodoModal
-          isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
-          onSubmit={addTodo}
         />
       </main>
     </div>

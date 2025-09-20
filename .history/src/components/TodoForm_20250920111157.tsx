@@ -3,17 +3,6 @@
 import { useState } from "react";
 import { Calendar, Bell } from "lucide-react";
 
-// Add helper function
-const getJakartaDateTime = () => {
-  const now = new Date();
-  const jakartaOffset = 7 * 60; // WIB is UTC+7
-  const localOffset = now.getTimezoneOffset();
-  const totalOffset = jakartaOffset + localOffset;
-
-  now.setMinutes(now.getMinutes() + totalOffset);
-  return now.toISOString().slice(0, 16); // Format for datetime-local input
-};
-
 type Props = {
   addTodo: (
     todo: string,
@@ -53,9 +42,7 @@ export default function TodoForm({ addTodo }: Props) {
 
         <select
           value={priority}
-          onChange={(e) =>
-            setPriority(e.target.value as "low" | "medium" | "high")
-          }
+          onChange={(e) => setPriority(e.target.value as "low" | "medium" | "high")}
           className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
         >
           <option value="low">Low</option>
@@ -77,7 +64,6 @@ export default function TodoForm({ addTodo }: Props) {
           <input
             type="datetime-local"
             value={deadline}
-            min={getJakartaDateTime()}
             onChange={(e) => setDeadline(e.target.value)}
             className="px-3 py-1 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
@@ -88,7 +74,6 @@ export default function TodoForm({ addTodo }: Props) {
           <input
             type="datetime-local"
             value={reminder}
-            min={getJakartaDateTime()}
             onChange={(e) => setReminder(e.target.value)}
             className="px-3 py-1 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
