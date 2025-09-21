@@ -41,7 +41,7 @@ export default function AddTodoModal({
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
   const [deadline, setDeadline] = useState("");
   const [reminder, setReminder] = useState("");
-
+  
   // State untuk validation
   const [showError, setShowError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,20 +58,18 @@ export default function AddTodoModal({
   // Update the handleSubmit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     // Validation dengan smooth UX
     if (!text.trim()) {
       setShowError(true);
       // Focus kembali ke input
-      const inputElement = e.currentTarget.querySelector(
-        'input[type="text"]'
-      ) as HTMLInputElement;
+      const inputElement = e.currentTarget.querySelector('input[type="text"]') as HTMLInputElement;
       inputElement?.focus();
       return;
     }
 
     setIsSubmitting(true);
-
+    
     try {
       await onSubmit(text.trim(), priority, deadline, reminder);
       // Reset form setelah berhasil
@@ -82,7 +80,7 @@ export default function AddTodoModal({
       setShowError(false);
       onClose();
     } catch (error) {
-      console.error("Error submitting task:", error);
+      console.error('Error submitting task:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -162,7 +160,7 @@ export default function AddTodoModal({
                       )}
                     </AnimatePresence>
                   </div>
-
+                  
                   {/* Error Message */}
                   <AnimatePresence>
                     {showError && (
@@ -254,11 +252,7 @@ export default function AddTodoModal({
                     {isSubmitting && (
                       <motion.div
                         animate={{ rotate: 360 }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
                       />
                     )}
