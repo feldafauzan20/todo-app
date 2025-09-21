@@ -139,57 +139,52 @@ export default function Dashboard() {
 
   const addTodo = async (
     text: string,
-    priority: "low" | "medium" | "high",
+    priority: "low" | "medium" | "high" = "medium",
     deadline?: string,
     reminder?: string
   ) => {
-    const toastId = toast.loading("Adding task...");
+    if (!user) return;
+    if (!text.trim()) return;
 
     try {
-      // Prepare payload dengan data yang clean
-      const payload: any = {
-        text: text.trim(),
-        priority,
-      };
+      // Store the dates exactly as received from the input
+      const { data, error } = await supabase
+        .from("todos")
+        .insert([
+          {
+            text,
+            user_id: user.id,
+            priority,
+            deadline,
+            reminder,
+          },
+        ])
+        .select();
 
-      // Hanya tambahkan deadline jika ada dan tidak kosong
-      if (deadline && deadline.trim() !== "") {
-        payload.deadline = deadline;
-      }
+      if (error) throw error;
 
-      // Hanya tambahkan reminder jika ada dan tidak kosong
-      if (reminder && reminder.trim() !== "") {
-        payload.reminder = reminder;
-      }
+      if (data) {
+        setTodos([...todos, ...data]);
+        toast.success("Task added successfully!");
 
-      console.log("Sending payload to API:", payload);
+        // Set reminder notification using the original time
+        if (reminder) {
+          const reminderTime = new Date(reminder).getTime();
+          const now = Date.now();
 
-      const res = await fetch("/api/todos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("API Error Response:", errorText);
-        throw new Error(`API Error: ${res.status} - ${errorText}`);
-      }
-
-      const data = await res.json();
-      console.log("API Success Response:", data);
-
-      if (data && Array.isArray(data) && data.length > 0) {
-        setTodos((prev) => [...prev, ...data]);
-        toast.success("Task added successfully!", { id: toastId });
-      } else {
-        throw new Error("Invalid response from server");
+          if (reminderTime > now) {
+            setTimeout(() => {
+              toast.success(`Reminder: ${text}`, {
+                duration: 10000,
+                icon: "🔔",
+              });
+            }, reminderTime - now);
+          }
+        }
       }
     } catch (error) {
       console.error("Error adding todo:", error);
-      toast.error("Failed to add task", { id: toastId });
+      toast.error("Failed to add task");
     }
   };
 
