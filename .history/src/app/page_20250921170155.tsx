@@ -5,7 +5,6 @@ import Image from "next/image";
 import { LuCheck, LuPencil, LuListTodo, LuSmartphone } from "react-icons/lu";
 import { motion, Variants } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import ImageWithFallback from "@/components/ImageWithFallback";
 
 // Scroll animation
 const scrollVariants: Variants = {
@@ -114,21 +113,12 @@ export default function LandingPage() {
             custom={3}
             className="relative h-[400px] md:h-[500px] flex justify-center"
           >
-            <ImageWithFallback
-              src="/assets/illustrations/mockup-hero.webp"
+            <Image
+              src="/assets/illustrations/mockup-hero.webp" // ganti dengan asset mockup kamu
               alt="App Mockup"
               fill
               priority={true}
-              quality={75}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              loading="eager"
-              className="object-contain"
-              fallback={
-                <div className="text-sm text-gray-500">Loading image...</div>
-              }
-              style={{
-                transform: "translate3d(0, 0, 0)",
-              }}
+              className="object-contain drop-shadow-2xl"
             />
           </motion.div>
         </div>

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 // type Todo update
-// type TodoUpdate = { text?: string; is_done?: boolean };
+type TodoUpdate = { text?: string; is_done?: boolean };
 
 // helper ambil session user
 async function getUserId() {
@@ -35,9 +35,11 @@ export async function GET() {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
-    // Fix cookie handling
-    const cookieStore = await cookies();
-    const token = cookieStore.get("sb-zobtvnminagptpzifhgn-auth-token");
+    // Await the cookies
+    const cookieStore = cookies();
+    const token = await (
+      await cookieStore
+    ).get("sb-zobtvnminagptpzifhgn-auth-token");
 
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -99,8 +101,8 @@ export async function PATCH(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
 
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("sb-zobtvnminagptpzifhgn-auth-token");
+    const cookieStore = cookies();
+    const token = await cookieStore.get("sb-zobtvnminagptpzifhgn-auth-token");
 
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

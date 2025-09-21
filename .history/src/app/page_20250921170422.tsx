@@ -5,7 +5,6 @@ import Image from "next/image";
 import { LuCheck, LuPencil, LuListTodo, LuSmartphone } from "react-icons/lu";
 import { motion, Variants } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import ImageWithFallback from "@/components/ImageWithFallback";
 
 // Scroll animation
 const scrollVariants: Variants = {
@@ -114,21 +113,17 @@ export default function LandingPage() {
             custom={3}
             className="relative h-[400px] md:h-[500px] flex justify-center"
           >
-            <ImageWithFallback
+            <Image
               src="/assets/illustrations/mockup-hero.webp"
               alt="App Mockup"
               fill
               priority={true}
-              quality={75}
+              quality={85}
               sizes="(max-width: 768px) 100vw, 50vw"
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4dHRsdHSIgIR0hISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISH/2wBDARAVFhkeGRkhHRkdISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISH/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
               loading="eager"
-              className="object-contain"
-              fallback={
-                <div className="text-sm text-gray-500">Loading image...</div>
-              }
-              style={{
-                transform: "translate3d(0, 0, 0)",
-              }}
+              className="object-contain drop-shadow-2xl"
             />
           </motion.div>
         </div>

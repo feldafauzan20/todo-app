@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 // type Todo update
-// type TodoUpdate = { text?: string; is_done?: boolean };
+type TodoUpdate = { text?: string; is_done?: boolean };
 
 // helper ambil session user
 async function getUserId() {
