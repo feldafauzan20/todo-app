@@ -71,6 +71,7 @@ export default function TodoList({
 
   // Add helper function to format date in Indonesian
   const formatIndonesianDateTime = (dateString: string) => {
+    // Parse the date string and create a date object
     const date = new Date(dateString);
 
     const days = [
@@ -97,7 +98,7 @@ export default function TodoList({
       "Desember",
     ];
 
-    // Use UTC methods to get exact values without timezone conversion
+    // Get UTC time components
     const utcDay = date.getUTCDay();
     const utcDate = date.getUTCDate();
     const utcMonth = date.getUTCMonth();
@@ -105,6 +106,7 @@ export default function TodoList({
     const utcHours = date.getUTCHours();
     const utcMinutes = date.getUTCMinutes();
 
+    // Format with UTC values
     return `${days[utcDay]}, ${utcDate} ${months[utcMonth]} ${utcYear} ${String(
       utcHours
     ).padStart(2, "0")}:${String(utcMinutes).padStart(2, "0")}`;
@@ -116,15 +118,11 @@ export default function TodoList({
     return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDThh:mm
   };
 
-  // Update both functions to handle timezone consistently
+  // Replace the isPast check with this simple function
   const isDeadlineOverdue = (deadline: string) => {
     const now = new Date();
     const deadlineDate = new Date(deadline);
-
-    // Convert current time to WIB (UTC+7)
-    const nowInWIB = new Date(now.getTime() + 7 * 60 * 60 * 1000);
-
-    return nowInWIB > deadlineDate;
+    return now > deadlineDate;
   };
 
   return (
@@ -173,13 +171,7 @@ export default function TodoList({
                         textDecoration: todo.is_done ? "line-through" : "none",
                       }}
                       transition={{ duration: 0.3 }}
-                      className={`text-gray-800 flex-1 ${
-                        todo.deadline &&
-                        isDeadlineOverdue(todo.deadline) &&
-                        !todo.is_done
-                          ? "text-red-500 font-medium"
-                          : "text-gray-800"
-                      }`}
+                      className="text-gray-800 flex-1"
                     >
                       {todo.text}
                     </motion.span>
@@ -198,12 +190,6 @@ export default function TodoList({
                             }`}
                           >
                             {formatIndonesianDateTime(todo.deadline)} WIB
-                            {isDeadlineOverdue(todo.deadline) &&
-                              !todo.is_done && (
-                                <span className="ml-2 bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">
-                                  Overdue
-                                </span>
-                              )}
                           </span>
                         </div>
                       )}

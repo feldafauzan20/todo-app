@@ -124,6 +124,10 @@ export default function TodoList({
     // Convert current time to WIB (UTC+7)
     const nowInWIB = new Date(now.getTime() + 7 * 60 * 60 * 1000);
 
+    console.log("Current time WIB:", nowInWIB.toISOString());
+    console.log("Deadline UTC:", deadlineDate.toISOString());
+    console.log("Is overdue?", nowInWIB > deadlineDate);
+
     return nowInWIB > deadlineDate;
   };
 
@@ -173,13 +177,7 @@ export default function TodoList({
                         textDecoration: todo.is_done ? "line-through" : "none",
                       }}
                       transition={{ duration: 0.3 }}
-                      className={`text-gray-800 flex-1 ${
-                        todo.deadline &&
-                        isDeadlineOverdue(todo.deadline) &&
-                        !todo.is_done
-                          ? "text-red-500 font-medium"
-                          : "text-gray-800"
-                      }`}
+                      className="text-gray-800 flex-1"
                     >
                       {todo.text}
                     </motion.span>
@@ -198,12 +196,6 @@ export default function TodoList({
                             }`}
                           >
                             {formatIndonesianDateTime(todo.deadline)} WIB
-                            {isDeadlineOverdue(todo.deadline) &&
-                              !todo.is_done && (
-                                <span className="ml-2 bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">
-                                  Overdue
-                                </span>
-                              )}
                           </span>
                         </div>
                       )}

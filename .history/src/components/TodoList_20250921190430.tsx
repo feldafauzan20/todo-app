@@ -174,9 +174,7 @@ export default function TodoList({
                       }}
                       transition={{ duration: 0.3 }}
                       className={`text-gray-800 flex-1 ${
-                        todo.deadline &&
-                        isDeadlineOverdue(todo.deadline) &&
-                        !todo.is_done
+                        todo.deadline && isDeadlineOverdue(todo.deadline) && !todo.is_done
                           ? "text-red-500 font-medium"
                           : "text-gray-800"
                       }`}
@@ -198,12 +196,11 @@ export default function TodoList({
                             }`}
                           >
                             {formatIndonesianDateTime(todo.deadline)} WIB
-                            {isDeadlineOverdue(todo.deadline) &&
-                              !todo.is_done && (
-                                <span className="ml-2 bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">
-                                  Overdue
-                                </span>
-                              )}
+                            {isDeadlineOverdue(todo.deadline) && !todo.is_done && (
+                              <span className="ml-2 bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-bold">
+                                Overdue
+                              </span>
+                            )}
                           </span>
                         </div>
                       )}
