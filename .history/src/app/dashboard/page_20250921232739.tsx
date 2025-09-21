@@ -22,7 +22,6 @@ import AddTodoModal from "@/components/modal/AddTodoModal";
 import { useOverdueDetection } from "@/hooks/useOverdueDetection";
 import { useNotificationPermission } from "@/hooks/useNotificationPermission";
 import { useRealtimeNotification } from "@/hooks/useRealtimeNotification";
-import NotificationSettings from "@/components/NotificationSettings"; // Import NotificationSettings
 // import { format } from "date-fns";
 // import { id } from "date-fns/locale";
 
@@ -415,14 +414,6 @@ export default function Dashboard() {
                 </motion.div>
               )}
 
-              {/* Tambahkan Notification Settings */}
-              <NotificationSettings
-                permission={permission}
-                isGranted={isGranted}
-                isSupported={isSupported}
-                requestPermission={requestPermission}
-              />
-
               <span className="text-sm text-gray-600">{user?.email}</span>
               <button
                 onClick={handleLogout}
@@ -707,8 +698,7 @@ export default function Dashboard() {
                 removeTodo={removeTodo}
                 toggleTodo={toggleTodo}
                 updateTodo={updateTodo}
-                deleteAllTodos={deleteAllTodos}
-                isOverdue={isOverdue} // Tambahkan prop ini
+                deleteAllTodos={deleteAllTodos} // Add this
               />
             )}
           </div>

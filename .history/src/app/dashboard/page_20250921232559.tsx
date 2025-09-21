@@ -22,7 +22,6 @@ import AddTodoModal from "@/components/modal/AddTodoModal";
 import { useOverdueDetection } from "@/hooks/useOverdueDetection";
 import { useNotificationPermission } from "@/hooks/useNotificationPermission";
 import { useRealtimeNotification } from "@/hooks/useRealtimeNotification";
-import NotificationSettings from "@/components/NotificationSettings"; // Import NotificationSettings
 // import { format } from "date-fns";
 // import { id } from "date-fns/locale";
 
@@ -374,55 +373,16 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Navbar */}
-      <nav className="bg-white shadow-sm border-b sticky top-0 z-40">
+      <nav className="backdrop-blur-md bg-white/70 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
+          <div className="flex justify-between h-16">
             <div className="flex items-center gap-2">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                className="text-2xl"
-              >
-                📋
-              </motion.div>
-              <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                Dashboard
-                {/* Badge overdue indicator */}
-                {hasOverdue && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
-                  >
-                    {overdueCount}
-                  </motion.span>
-                )}
-              </h1>
+              <BookOpenCheck className="h-6 w-6 text-pink-500" />
+              <h1 className="text-lg font-semibold text-gray-800">Dashboard</h1>
             </div>
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-4">
-              {/* Overdue indicator text */}
-              {hasOverdue && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-2 text-sm text-red-600 bg-red-50 px-3 py-1 rounded-full"
-                >
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  {overdueCount} overdue task{overdueCount > 1 ? "s" : ""}
-                </motion.div>
-              )}
-
-              {/* Tambahkan Notification Settings */}
-              <NotificationSettings
-                permission={permission}
-                isGranted={isGranted}
-                isSupported={isSupported}
-                requestPermission={requestPermission}
-              />
-
               <span className="text-sm text-gray-600">{user?.email}</span>
               <button
                 onClick={handleLogout}
@@ -707,8 +667,7 @@ export default function Dashboard() {
                 removeTodo={removeTodo}
                 toggleTodo={toggleTodo}
                 updateTodo={updateTodo}
-                deleteAllTodos={deleteAllTodos}
-                isOverdue={isOverdue} // Tambahkan prop ini
+                deleteAllTodos={deleteAllTodos} // Add this
               />
             )}
           </div>
