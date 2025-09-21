@@ -80,9 +80,6 @@ export default function Dashboard() {
     "all" | "low" | "medium" | "high"
   >("all");
 
-  // ✅ TAMBAHKAN STATE UNTUK SOUND STATUS DI SINI (sekitar line 75)
-  const [soundEnabled, setSoundEnabled] = useState(true);
-
   // 👉 helper untuk pilih warna sesuai progress
   const getProgressColor = (rate: number) => {
     if (rate < 30) return "text-red-500"; // rendah
@@ -100,23 +97,7 @@ export default function Dashboard() {
     getHighestPriorityOverdue,
     isOverdue,
     clearTaskNotification,
-  } = useOverdueManager(todos, isGranted);
-
-  // ✅ TAMBAHKAN useEffect UNTUK SYNC SOUND STATUS DI SINI
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSoundEnabled(localStorage.getItem("notification-sound") !== "false");
-    }
-  }, []);
-
-  // ✅ TAMBAHKAN FUNCTION TOGGLE SOUND MOBILE DI SINI
-  const toggleSoundMobile = async () => {
-    const { notificationService } = await import(
-      "@/services/NotificationService"
-    );
-    const newStatus = notificationService.toggleSound();
-    setSoundEnabled(newStatus);
-  };
+  } = useOverdueManager(todos, isGranted); // gunakan isGranted sebagai isNotificationEnabled
 
   useEffect(() => {
     const checkUser = async () => {
@@ -551,32 +532,28 @@ export default function Dashboard() {
                     <div className="text-sm font-medium text-gray-700 mb-3">
                       Notification Settings
                     </div>
-
+                    
                     {/* Permission Status */}
                     <div className="bg-gray-50 rounded-lg p-3 mb-3">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-gray-600">
-                          Browser Notifications
-                        </span>
+                        <span className="text-xs text-gray-600">Browser Notifications</span>
                         <div className="flex items-center gap-2">
                           {isGranted ? (
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                           ) : (
                             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                           )}
-                          <span
-                            className={`text-xs px-2 py-0.5 rounded-full ${
-                              isGranted
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
-                          >
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            isGranted 
+                              ? 'bg-green-100 text-green-700' 
+                              : 'bg-red-100 text-red-700'
+                          }`}>
                             {permission}
                           </span>
                         </div>
                       </div>
-
-                      {!isGranted && permission === "default" && (
+                      
+                      {!isGranted && permission === 'default' && (
                         <button
                           onClick={requestPermission}
                           className="w-full px-3 py-2 bg-blue-600 text-white rounded-lg text-xs hover:bg-blue-700 transition-colors"
@@ -586,20 +563,29 @@ export default function Dashboard() {
                       )}
                     </div>
 
-                    {/* Sound Toggle untuk mobile - improved version */}
+                    {/* Sound Toggle untuk mobile */}
                     <div className="bg-gray-50 rounded-lg p-3">
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-600">Sound</span>
                         <button
-                          onClick={toggleSoundMobile} // ✅ GANTI DENGAN FUNCTION BARU
+                          onClick={() => {
+                            // Import notificationService jika belum
+                            import('@/services/NotificationService').then(({ notificationService }) => {
+                              notificationService.toggleSound();
+                              // Force re-render untuk update UI
+                              setIsMenuOpen(false);
+                              setTimeout(() => setIsMenuOpen(true), 50);
+                            });
+                          }}
                           className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
-                            soundEnabled // ✅ GUNAKAN STATE soundEnabled
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
+                            // Check sound enabled status
+                            typeof window !== 'undefined' && localStorage.getItem('notification-sound') !== 'false'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-gray-100 text-gray-700'
                           }`}
                         >
-                          {soundEnabled ? "🔊" : "🔇"}
-                          {soundEnabled ? "On" : "Off"}
+                          {typeof window !== 'undefined' && localStorage.getItem('notification-sound') !== 'false' ? '🔊' : '🔇'}
+                          {typeof window !== 'undefined' && localStorage.getItem('notification-sound') !== 'false' ? 'On' : 'Off'}
                         </button>
                       </div>
                     </div>
