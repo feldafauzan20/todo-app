@@ -163,7 +163,7 @@ export default function TodoList({
                 className="bg-white shadow rounded-lg overflow-hidden"
               >
                 {/* Mobile-First Responsive Layout */}
-                <div className="p-4 lg:hidden">
+                <div className="p-4">
                   {/* Top Row: Checkbox + Task Name + Priority */}
                   <div className="flex items-start gap-3 mb-2">
                     <input
@@ -275,7 +275,7 @@ export default function TodoList({
                 </div>
 
                 {/* Desktop Layout Fallback */}
-                <div className="hidden lg:block">
+                <div className="hidden sm:block">
                   <div className="flex items-center justify-between p-3">
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-3">

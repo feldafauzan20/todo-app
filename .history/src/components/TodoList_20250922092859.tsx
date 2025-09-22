@@ -163,7 +163,7 @@ export default function TodoList({
                 className="bg-white shadow rounded-lg overflow-hidden"
               >
                 {/* Mobile-First Responsive Layout */}
-                <div className="p-4 lg:hidden">
+                <div className="p-4">
                   {/* Top Row: Checkbox + Task Name + Priority */}
                   <div className="flex items-start gap-3 mb-2">
                     <input
@@ -275,16 +275,14 @@ export default function TodoList({
                 </div>
 
                 {/* Desktop Layout Fallback */}
-                <div className="hidden lg:block">
+                <div className="hidden sm:block">
                   <div className="flex items-center justify-between p-3">
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={todo.is_done}
-                          onChange={(e) =>
-                            toggleTodo(todo.id, e.target.checked)
-                          }
+                          onChange={(e) => toggleTodo(todo.id, e.target.checked)}
                           className="w-4 h-4 text-pink-500 rounded focus:ring-pink-400"
                         />
                         <motion.span
