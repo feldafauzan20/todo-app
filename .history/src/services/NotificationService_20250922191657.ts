@@ -39,10 +39,7 @@ class NotificationService {
   }
 
   // Show browser notification
-  showOverdueNotification(
-    count: number,
-    taskInfo: { id: number; text: string; priority?: "low" | "medium" | "high" }
-  ): void {
+  showOverdueNotification(count: number, taskInfo: { id: number; text: string; priority?: "low" | "medium" | "high" }): void {
     if (Notification.permission !== "granted") return;
 
     // Check if already notified this task
@@ -99,17 +96,9 @@ class NotificationService {
 
   // Check and notify for overdue tasks
   checkAndNotify(
-    overdueTodos: {
-      id: number;
-      text: string;
-      priority?: "low" | "medium" | "high";
-    }[],
+    overdueTodos: { id: number; text: string; priority?: "low" | "medium" | "high" }[],
     overdueCount: number,
-    getHighestPriority: () => {
-      id: number;
-      text: string;
-      priority?: "low" | "medium" | "high";
-    } | null
+    getHighestPriority: () => { id: number; text: string; priority?: "low" | "medium" | "high" } | null
   ): void {
     if (overdueCount === 0) return;
 

@@ -43,7 +43,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("todos")
-    .select("id, text, is_done, priority, deadline, reminder")
+    .select("id, text, is_done, priority, deadline, reminder") // TAMBAHKAN deadline, reminder
     .eq("user_id", session.user.id)
     .order("created_at", { ascending: false });
 

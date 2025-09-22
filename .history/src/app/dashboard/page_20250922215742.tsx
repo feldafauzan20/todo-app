@@ -317,17 +317,17 @@ export default function Dashboard() {
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
-
+      
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const easedProgress = easeOutCubic(progress);
-
+      
       const currentValue = Math.round(
         startValue + (endValue - startValue) * easedProgress
       );
-
+      
       setAnimatedRate(currentValue);
-
+      
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       }
@@ -342,13 +342,6 @@ export default function Dashboard() {
       }
     };
   }, [completionRate]); // ✅ HANYA completionRate sebagai dependency
-
-  // TAMBAHKAN useEffect ini SETELAH useEffect animasi:
-  useEffect(() => {
-    if (todos.length === 0 && animatedRate !== 0) {
-      setAnimatedRate(0);
-    }
-  }, [todos.length, animatedRate]);
 
   // Add priority order helper
   const priorityOrder = {

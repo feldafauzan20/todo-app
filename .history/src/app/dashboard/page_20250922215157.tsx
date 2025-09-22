@@ -304,51 +304,26 @@ export default function Dashboard() {
 
   // 👉 animate completionRate changes
   useEffect(() => {
-    // Skip jika nilai sudah sama (mencegah unnecessary animation)
-    if (Math.abs(animatedRate - completionRate) < 1) return;
-
+    const start = animatedRate;
+    const end = completionRate;
     let startTime: number | null = null;
-    let animationFrame: number;
-    const startValue = animatedRate;
-    const endValue = completionRate;
-    const duration = 800;
 
+    const duration = 800; // ms - lebih lama untuk smooth
+    
+    // Easing function untuk smooth animation
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
+    
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
-
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = Math.min((timestamp - startTime) / duration, 1);
       const easedProgress = easeOutCubic(progress);
-
-      const currentValue = Math.round(
-        startValue + (endValue - startValue) * easedProgress
-      );
-
-      setAnimatedRate(currentValue);
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
+      const value = Math.round(start + (end - start) * easedProgress);
+      setAnimatedRate(value);
+      if (progress < 1) requestAnimationFrame(animate);
     };
 
-    animationFrame = requestAnimationFrame(animate);
-
-    // Cleanup
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [completionRate]); // ✅ HANYA completionRate sebagai dependency
-
-  // TAMBAHKAN useEffect ini SETELAH useEffect animasi:
-  useEffect(() => {
-    if (todos.length === 0 && animatedRate !== 0) {
-      setAnimatedRate(0);
-    }
-  }, [todos.length, animatedRate]);
+    requestAnimationFrame(animate);
+  }, [completionRate, animatedRate]);
 
   // Add priority order helper
   const priorityOrder = {
@@ -705,10 +680,9 @@ export default function Dashboard() {
                     r="16"
                     cx="20"
                     cy="20"
-                    strokeDasharray={`${(animatedRate * 100.53) / 100} 100.53`}
+                    strokeDasharray={`${(animatedRate * 100.48) / 100} 100.48`}
                     style={{
                       strokeDashoffset: 0,
-                      transformOrigin: "center",
                     }}
                   />
                 </svg>

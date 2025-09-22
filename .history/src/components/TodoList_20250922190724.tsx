@@ -6,11 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ConfirmModal from "./modal/ConfirmModal";
 import EditModal from "./edit/EditModal";
 import { Calendar, Bell, Edit3, Trash2 } from "lucide-react";
-import {
-  formatIndonesianDateTime,
-  truncateText,
-  getPriorityBadgeClasses,
-} from "@/lib/utils";
+import { formatIndonesianDateTime, truncateText, getPriorityBadgeClasses } from "@/lib/utils";
 
 // Update the Todo type to include priority
 type Todo = {
@@ -137,9 +133,7 @@ export default function TodoList({
                     {/* Priority Badge */}
                     {todo.priority && (
                       <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getPriorityBadgeClasses(
-                          todo.priority
-                        )}`}
+                        className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getPriorityBadgeClasses(todo.priority)}`}
                       >
                         {todo.priority}
                       </span>
@@ -274,9 +268,7 @@ export default function TodoList({
                       {/* Priority badge */}
                       {todo.priority && (
                         <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityBadgeClasses(
-                            todo.priority
-                          )}`}
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityBadgeClasses(todo.priority)}`}
                         >
                           {todo.priority}
                         </span>

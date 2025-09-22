@@ -15,19 +15,19 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import EditModal from "@/components/edit/EditModal";
-import TodoList from "@/components/TodoList";
+import TodoList from "@/components/TodoList"; // Import TodoList component
 import AddTodoModal from "@/components/modal/AddTodoModal";
 import { useNotificationPermission } from "@/hooks/useNotificationPermission";
 import { useOverdueManager } from "@/hooks/useOverdueManager";
-import NotificationSettings from "@/components/NotificationSettings";
+import NotificationSettings from "@/components/NotificationSettings"; // Import NotificationSettings
 
 type Todo = {
   id: number;
   text: string;
   is_done: boolean;
   priority?: "low" | "medium" | "high";
-  deadline?: string;
-  reminder?: string;
+  deadline?: string; // ISO date string
+  reminder?: string; // ISO date string
 };
 
 export default function Dashboard() {
@@ -80,8 +80,12 @@ export default function Dashboard() {
   const { permission, isGranted, isSupported, requestPermission } =
     useNotificationPermission();
 
-  const { overdueCount, hasOverdue, isOverdue, clearTaskNotification } =
-    useOverdueManager(todos, isGranted);
+  const {
+    overdueCount,
+    hasOverdue,
+    isOverdue,
+    clearTaskNotification,
+  } = useOverdueManager(todos, isGranted);
 
   // ✅ TAMBAHKAN useEffect UNTUK SYNC SOUND STATUS DI SINI
   useEffect(() => {
@@ -304,52 +308,23 @@ export default function Dashboard() {
 
   // 👉 animate completionRate changes
   useEffect(() => {
-    // Skip jika nilai sudah sama (mencegah unnecessary animation)
-    if (Math.abs(animatedRate - completionRate) < 1) return;
-
+    const start = animatedRate;
+    const end = completionRate;
     let startTime: number | null = null;
-    let animationFrame: number;
-    const startValue = animatedRate;
-    const endValue = completionRate;
-    const duration = 800;
 
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
+    const duration = 500; // ms
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
-
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-
-      const currentValue = Math.round(
-        startValue + (endValue - startValue) * easedProgress
-      );
-
-      setAnimatedRate(currentValue);
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const value = Math.round(start + (end - start) * progress);
+      setAnimatedRate(value);
+      if (progress < 1) requestAnimationFrame(animate);
     };
 
-    animationFrame = requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
+  }, [completionRate, animatedRate]);
 
-    // Cleanup
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [completionRate]); // ✅ HANYA completionRate sebagai dependency
-
-  // TAMBAHKAN useEffect ini SETELAH useEffect animasi:
-  useEffect(() => {
-    if (todos.length === 0 && animatedRate !== 0) {
-      setAnimatedRate(0);
-    }
-  }, [todos.length, animatedRate]);
-
+  // 👉 apply filter & search
   // Add priority order helper
   const priorityOrder = {
     high: 3,
@@ -602,9 +577,9 @@ export default function Dashboard() {
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-600">Sound</span>
                         <button
-                          onClick={toggleSoundMobile}
+                          onClick={toggleSoundMobile} // ✅ GANTI DENGAN FUNCTION BARU
                           className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
-                            soundEnabled
+                            soundEnabled // ✅ GUNAKAN STATE soundEnabled
                               ? "bg-green-100 text-green-700"
                               : "bg-gray-100 text-gray-700"
                           }`}
@@ -697,7 +672,7 @@ export default function Dashboard() {
                   <circle
                     className={`${getProgressColor(
                       animatedRate
-                    )} transition-all duration-[800ms] ease-out`}
+                    )} transition-all duration-500`}
                     strokeWidth="4"
                     strokeLinecap="round"
                     stroke="currentColor"
@@ -705,11 +680,7 @@ export default function Dashboard() {
                     r="16"
                     cx="20"
                     cy="20"
-                    strokeDasharray={`${(animatedRate * 100.53) / 100} 100.53`}
-                    style={{
-                      strokeDashoffset: 0,
-                      transformOrigin: "center",
-                    }}
+                    strokeDasharray={`${animatedRate} 100`}
                   />
                 </svg>
               </div>
@@ -806,6 +777,9 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border p-6">
+            {/* <h2 className="text-lg font-medium text-gray-800 mb-3">
+              Your Tasks
+            </h2> */}
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader className="h-6 w-6 text-pink-500 animate-spin" />
@@ -817,7 +791,7 @@ export default function Dashboard() {
                 toggleTodo={toggleTodo}
                 updateTodo={updateTodo}
                 deleteAllTodos={deleteAllTodos}
-                isOverdue={isOverdue}
+                isOverdue={isOverdue} // Tambahkan prop ini
               />
             )}
           </div>
@@ -866,7 +840,7 @@ export default function Dashboard() {
           }}
           title="Delete Task"
           message="Are you sure you want to delete this task? This action cannot be undone."
-          itemName={deleteModal.itemName}
+          itemName={deleteModal.itemName} // Add this prop
         />
 
         <EditModal

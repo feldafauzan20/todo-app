@@ -27,6 +27,22 @@ const formatDateTimeForInput = (dateString: string) => {
   return date.toISOString().slice(0, 16);
 };
 
+// Update the formatDateTimeForSubmit function
+const formatDateTimeForSubmit = (dateString: string): string | undefined => {
+  if (!dateString) return undefined;
+  const date = new Date(dateString);
+  // Create UTC date without timezone conversion
+  return new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes()
+    )
+  ).toISOString();
+};
+
 export default function EditModal({
   isOpen,
   onClose,
@@ -82,8 +98,8 @@ export default function EditModal({
       await onSave(
         text.trim(),
         priority,
-        deadline ? convertToWIB(deadline) : undefined,
-        reminder ? convertToWIB(reminder) : undefined
+        deadline ? formatDateTimeForSubmit(deadline) : undefined,
+        reminder ? formatDateTimeForSubmit(reminder) : undefined
       );
 
       // Close modal after successful save

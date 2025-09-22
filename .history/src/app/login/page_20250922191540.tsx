@@ -10,6 +10,7 @@ export default function LoginPage() {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          // Tambahkan skipBrowserRedirect untuk menangani redirect manual
           skipBrowserRedirect: true,
           queryParams: {
             access_type: "offline",
@@ -23,6 +24,7 @@ export default function LoginPage() {
         throw error;
       }
 
+      // Redirect manual ke callback URL
       if (data?.url) {
         window.location.href = data.url;
       }

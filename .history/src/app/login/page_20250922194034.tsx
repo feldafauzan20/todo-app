@@ -23,6 +23,7 @@ export default function LoginPage() {
         throw error;
       }
 
+      // Redirect manual ke callback URL
       if (data?.url) {
         window.location.href = data.url;
       }

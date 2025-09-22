@@ -343,13 +343,6 @@ export default function Dashboard() {
     };
   }, [completionRate]); // ✅ HANYA completionRate sebagai dependency
 
-  // TAMBAHKAN useEffect ini SETELAH useEffect animasi:
-  useEffect(() => {
-    if (todos.length === 0 && animatedRate !== 0) {
-      setAnimatedRate(0);
-    }
-  }, [todos.length, animatedRate]);
-
   // Add priority order helper
   const priorityOrder = {
     high: 3,

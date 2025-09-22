@@ -82,8 +82,8 @@ export default function EditModal({
       await onSave(
         text.trim(),
         priority,
-        deadline ? convertToWIB(deadline) : undefined,
-        reminder ? convertToWIB(reminder) : undefined
+        deadline ? formatDateTimeForSubmit(deadline) : undefined,
+        reminder ? formatDateTimeForSubmit(reminder) : undefined
       );
 
       // Close modal after successful save

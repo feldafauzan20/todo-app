@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Calendar, Bell } from "lucide-react";
-import { convertToWIB } from "@/lib/utils";
 
 type EditModalProps = {
   isOpen: boolean;
@@ -27,6 +26,22 @@ const formatDateTimeForInput = (dateString: string) => {
   return date.toISOString().slice(0, 16);
 };
 
+// Update the formatDateTimeForSubmit function
+const formatDateTimeForSubmit = (dateString: string): string | undefined => {
+  if (!dateString) return undefined;
+  const date = new Date(dateString);
+  // Create UTC date without timezone conversion
+  return new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes()
+    )
+  ).toISOString();
+};
+
 export default function EditModal({
   isOpen,
   onClose,
@@ -45,6 +60,7 @@ export default function EditModal({
     formatDateTimeForInput(initialReminder || "")
   );
   const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // update text jika initialText berubah
@@ -82,14 +98,15 @@ export default function EditModal({
       await onSave(
         text.trim(),
         priority,
-        deadline ? convertToWIB(deadline) : undefined,
-        reminder ? convertToWIB(reminder) : undefined
+        deadline ? formatDateTimeForSubmit(deadline) : undefined,
+        reminder ? formatDateTimeForSubmit(reminder) : undefined
       );
 
-      // Close modal after successful save
+      setSaved(true);
       setTimeout(() => {
+        setSaved(false);
         onClose();
-      }, 500);
+      }, 1000);
     } finally {
       setLoading(false);
     }

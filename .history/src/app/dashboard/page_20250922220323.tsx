@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import toast from "react-hot-toast";
 import {
@@ -303,9 +303,16 @@ export default function Dashboard() {
     : 0;
 
   // 👉 animate completionRate changes
+  const prevCompletionRateRef = useRef(completionRate);
+
   useEffect(() => {
-    // Skip jika nilai sudah sama (mencegah unnecessary animation)
-    if (Math.abs(animatedRate - completionRate) < 1) return;
+    const prevRate = prevCompletionRateRef.current;
+
+    // Skip jika nilai sama
+    if (prevRate === completionRate) return;
+
+    // Update ref
+    prevCompletionRateRef.current = completionRate;
 
     let startTime: number | null = null;
     let animationFrame: number;
@@ -341,7 +348,7 @@ export default function Dashboard() {
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [completionRate]); // ✅ HANYA completionRate sebagai dependency
+  }, [completionRate]); // Intentionally exclude animatedRate to prevent infinite loop
 
   // TAMBAHKAN useEffect ini SETELAH useEffect animasi:
   useEffect(() => {
