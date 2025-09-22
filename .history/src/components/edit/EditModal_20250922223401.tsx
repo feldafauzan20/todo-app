@@ -187,7 +187,7 @@ export default function EditModal({
                       type="datetime-local"
                       value={reminder}
                       onChange={(e) => setReminder(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 text-pink-500 border-pink-300 focus:ring-pink-400"
+                      className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                     />
                   </div>
                 </div>
