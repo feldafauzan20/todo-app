@@ -39,9 +39,15 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // 👉 Animated completion rate
   const [animatedRate, setAnimatedRate] = useState(0);
+
+  // 👉 Filter & search
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
   const [search, setSearch] = useState("");
+
+  // 👉 Modal states
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     todoId: number | null;
@@ -58,22 +64,14 @@ export default function Dashboard() {
     isOpen: false,
     todo: null,
   });
+
+  // Add priority filtering state
   const [priorityFilter, setPriorityFilter] = useState<
     "all" | "low" | "medium" | "high"
   >("all");
+
+  // ✅ TAMBAHKAN STATE UNTUK SOUND STATUS DI SINI (sekitar line 75)
   const [soundEnabled, setSoundEnabled] = useState(true);
-
-  // ✅ FIX: Add toast hook
-  const { toasts, removeToast, showReminder } = useToast();
-
-  const { permission, isGranted, isSupported, requestPermission } =
-    useNotificationPermission();
-
-  const { overdueCount, hasOverdue, isOverdue, clearTaskNotification } =
-    useOverdueManager(todos, isGranted);
-
-  // ✅ FIX: Use showReminder from useToast hook
-  useReminderManager(todos, showReminder);
 
   // 👉 helper untuk pilih warna sesuai progress
   const getProgressColor = (rate: number) => {
@@ -81,6 +79,12 @@ export default function Dashboard() {
     if (rate < 70) return "text-yellow-500"; // sedang
     return "text-green-500"; // tinggi
   };
+
+  const { permission, isGranted, isSupported, requestPermission } =
+    useNotificationPermission();
+
+  const { overdueCount, hasOverdue, isOverdue, clearTaskNotification } =
+    useOverdueManager(todos, isGranted);
 
   // ✅ TAMBAHKAN useEffect UNTUK SYNC SOUND STATUS DI SINI
   useEffect(() => {
@@ -340,9 +344,9 @@ export default function Dashboard() {
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [completionRate]); // ✅ FIX: Add animatedRate to dependencies
+  }, [completionRate]); // ✅ HANYA completionRate sebagai dependency
 
-  // Fix the second useEffect
+  // TAMBAHKAN useEffect ini SETELAH useEffect animasi:
   useEffect(() => {
     if (todos.length === 0 && animatedRate !== 0) {
       setAnimatedRate(0);

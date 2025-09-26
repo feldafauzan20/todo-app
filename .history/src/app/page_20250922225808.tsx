@@ -65,7 +65,7 @@ export default function LandingPage() {
 
         <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
           {/* Hero Content */}
-          <div className="text-center md:text-left pt-28 md:pt-0 space-y-6">
+          <div className="text-center md:text-left space-y-6">
             <motion.h1
               initial="hidden"
               animate="visible"

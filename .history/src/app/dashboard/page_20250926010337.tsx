@@ -340,7 +340,7 @@ export default function Dashboard() {
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [completionRate]); // ✅ FIX: Add animatedRate to dependencies
+  }, [completionRate, animatedRate]); // ✅ FIX: Add animatedRate to dependencies
 
   // Fix the second useEffect
   useEffect(() => {
