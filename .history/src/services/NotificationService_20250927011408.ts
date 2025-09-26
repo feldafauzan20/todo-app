@@ -107,6 +107,7 @@ class NotificationService {
       .play()
       .then(() => {
         this.audio!.muted = false;
+        console.log("Audio enabled for notifications");
       })
       .catch(() => {
         // Ignore error
