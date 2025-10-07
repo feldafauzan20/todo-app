@@ -45,7 +45,7 @@ export default function EditModal({
     formatDateTimeForInput(initialReminder || "")
   );
   const [loading, setLoading] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null); // ← Ubah dari HTMLInputElement ke HTMLTextAreaElement
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // update text jika initialText berubah
   useEffect(() => {
@@ -58,7 +58,6 @@ export default function EditModal({
   // auto focus saat modal dibuka
   useEffect(() => {
     if (isOpen && textareaRef.current) {
-      // ← Ubah dari inputRef ke textareaRef
       textareaRef.current.focus();
     }
   }, [isOpen]);
@@ -135,13 +134,12 @@ export default function EditModal({
                   placeholder="Edit your task..."
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-                      // Ctrl+Enter atau Cmd+Enter untuk save
+                    if (e.key === "Enter") {
                       handleSave();
                     }
                   }}
                   rows={3}
-                  className="w-full border border-blue-500 text-black px-4 py-3 rounded-lg mb-4 focus:ring-2 focus:ring-blue-300 outline-none resize-vertical"
+                  className="w-full border border-blue-500 text-black px-4 py-3 rounded-lg mb-4 focus:ring-2 focus:ring-blue-300 outline-none"
                 />
 
                 {/* Add priority selector */}

@@ -29,7 +29,7 @@ export default function AddTodoModal({
   // State untuk validation
   const [showError, setShowError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
   // Ref untuk textarea
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

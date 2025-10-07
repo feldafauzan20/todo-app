@@ -57,8 +57,7 @@ export default function EditModal({
 
   // auto focus saat modal dibuka
   useEffect(() => {
-    if (isOpen && textareaRef.current) {
-      // ← Ubah dari inputRef ke textareaRef
+    if (isOpen && textareaRef.current) { // ← Ubah dari inputRef ke textareaRef
       textareaRef.current.focus();
     }
   }, [isOpen]);
